@@ -1,0 +1,4 @@
+CREATE USER IF NOT EXISTS 'usuario'@'%' IDENTIFIED BY 'senha_usuario';
+GRANT ALL PRIVILEGES ON mydb.* TO 'usuario'@'%';
+GRANT CREATE, ALTER, DROP, REFERENCES ON *.* TO 'usuario'@'%';
+FLUSH PRIVILEGES;

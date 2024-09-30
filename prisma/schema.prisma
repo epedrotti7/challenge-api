@@ -1,0 +1,32 @@
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+model register {
+  id            Int      @id @default(autoincrement())
+  physicsPerson Boolean
+  juridicPerson Boolean
+  cnpj          String?
+  cpf           String?
+  name          String
+  fone          String
+  cellphone     String
+  email         String
+  repeatEmail   String
+  cep           String
+  street        String
+  number        Int
+  complement    String?
+  city          String
+  neighborhood  String
+  state         String
+  acceptedTerms Boolean
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

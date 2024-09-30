@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: src/config/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_secreta
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: senha_usuario
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "mysql://usuario:senha_usuario@mysql:3306/mydb"
+    ports:
+      - "3000:3000"
+    command: >
+      sh -c "
+        npx prisma generate &&
+        npx prisma migrate dev &&
+        npm run start
+      "
+    volumes:
+      - .:/usr/src/app
+    restart: always
+
+volumes:
+  mysql_data:
