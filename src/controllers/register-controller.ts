@@ -36,7 +36,7 @@ export class RegisterController {
                 res.status(404).send({ message: 'Register not found' });
             }
         } catch (error) {
-            console.error('Error in getRegisterByDoc:', error); // Adicione este log
+            console.error('Error in getRegisterByDoc:', error);
             res.status(500).send({ message: 'An error occurred while retrieving the register.' });
         }
     };
